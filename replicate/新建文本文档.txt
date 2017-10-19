@@ -1,0 +1,260 @@
+		Main a = new Main();
+		JFrame frame = new JFrame(" ");
+		JPanel Current = new JPanel();
+		
+//----------------------------------------------------------------密码板块--------------	
+		final JPanel passwordPanel = new JPanel();
+		passwordPanel.setBounds(14, 24, 1165, 606);
+		passwordPanel.setLayout(null);
+		final JPasswordField password = new JPasswordField();
+		password.setBounds(285, 123, 538, 37);
+		passwordPanel.add(password);
+		JButton admit = new JButton("确认");
+		admit.setBounds(360, 257, 394, 218);
+		admit.addActionListener(new ActionListener(){
+
+			public void actionPerformed(ActionEvent arg0) {
+				char[] get = password.getPassword();
+
+				if(Arrays.equals(get, administorPasswords)){
+					new Manager().CreateInterface();
+				}
+				else{
+					JOptionPane.showMessageDialog(frame, "您的密码错误","提示",JOptionPane.INFORMATION_MESSAGE);
+				}
+			}
+		});
+		passwordPanel.add(admit);
+//---------------------------------------------------------------------------	
+		
+
+//----------------------------------------------------------工具栏----------------	
+		for(int i=0;i<7;i++){
+			item[i] = new JMenuItem(menu[i]);
+			item[i].setFont(TOOL.standard);
+		}
+		JMenuBar menuBar = new JMenuBar();
+		frame.setJMenuBar(menuBar);
+		JMenu mainfunc = new JMenu("主要功能");
+		mainfunc.setFont(new Font("方正兰亭超细黑简体", Font.BOLD, 20));
+		menuBar.add(mainfunc);
+		JMenu mydata = new JMenu("我的记录");
+		mydata.setFont(new Font("方正兰亭超细黑简体", Font.BOLD, 20));
+		menuBar.add(mydata);
+		JMenu other = new JMenu("其他");
+		other.setFont(new Font("方正兰亭超细黑简体", Font.BOLD, 20));
+		menuBar.add(other);
+		mainfunc.add(item[6]);mainfunc.add(item[0]);mainfunc.add(item[1]);
+		mydata.add(item[2]);mydata.add(item[3]);
+		other.add(item[4]);other.add(item[5]);
+		
+//----------------------------------------------------------行程版块------------------		
+		
+		JTabbedPane makeRoute = new JTabbedPane(JTabbedPane.TOP);
+		JPanel ButtonPanel = new JPanel(new FlowLayout());
+		JButton save =new JButton("结算保存") ,time = new JButton("添加日期"),
+				delete = new JButton("删除"),add = new JButton("添加空行程");
+		ButtonPanel.add(save);ButtonPanel.add(delete);
+		ButtonPanel.add(add);ButtonPanel.add(time);
+		makeRoute.setBounds(14, 32, 870, 600);
+		makeRoute.setFont(TOOL.standard);
+		for(CityPanel key:a.CityList){
+			makeRoute.addTab(key.showmyname(), key);
+		}
+		JPanel tablePanel = new JPanel();
+		tablePanel.setBounds(891, 15, 356, 617);
+		tablePanel.setLayout(new BorderLayout());
+		 Object[][] Info={};//创建表格中的空数据
+		String[] head={"行程","开销"};//创建表格中的横标题
+		model = new DefaultTableModel(Info,head);
+		table = new JTable(model);
+		JScrollPane f = new JScrollPane(table);
+		table.getColumnModel().getColumn(0).setPreferredWidth(400);
+		tablePanel.add(f,BorderLayout.CENTER);
+		tablePanel.add(table.getTableHeader(),BorderLayout.NORTH);
+		tablePanel.add(ButtonPanel,BorderLayout.SOUTH);
+		makeRoute.setSelectedIndex(3);
+//----------------------------------------------------------------主界面----------------
+		final JPanel MainPanel = new JPanel();
+		MainPanel.setLayout(null);
+		MainPanel.setBounds(0, 0, 1193, 643);
+		Icon b1 = new ImageIcon("./route.jpg");
+		Icon b2 = new ImageIcon("./see.jpg");
+		Icon b3 = new ImageIcon("./reserve.jpg");
+		JButton btnNewButton = new JButton("New button");
+		btnNewButton.setBounds(93, 222, 250, 250);
+		btnNewButton.setIcon(b1);
+		MainPanel.add(btnNewButton);
+		
+		JButton button = new JButton("New button");
+		button.setBounds(454, 222, 250, 250);
+		button.setIcon(b2);
+		MainPanel.add(button);
+		
+		JButton button_1 = new JButton("New button");
+		button_1.setBounds(831, 222, 250, 250);
+		button_1.setIcon(b3);
+		MainPanel.add(button_1);					
+//----------------------------------------------------------------------------
+		
+		
+		btnNewButton.addActionListener(new ActionListener(){
+
+			public void actionPerformed(ActionEvent arg0) {
+				Current.removeAll();
+				Current.add(makeRoute);
+				Current.add(tablePanel);
+				Current.repaint();
+			}
+		});
+		
+		button.addActionListener(new ActionListener(){
+
+			public void actionPerformed(ActionEvent arg0) {
+				Current.removeAll();
+				
+				Current.repaint();
+			}
+		});
+		
+		item[1].addActionListener(new ActionListener(){
+
+			public void actionPerformed(ActionEvent arg0) {
+				Current.removeAll();
+				Current.add(makeRoute);
+				Current.add(tablePanel);
+				Current.repaint();
+			}
+		});
+		
+		item[4].addActionListener(new ActionListener(){
+
+			public void actionPerformed(ActionEvent arg0) {
+				Current.removeAll();
+				Current.add(passwordPanel);
+				Current.repaint();
+			}
+		});
+		
+		item[6].addActionListener(new ActionListener(){
+
+			public void actionPerformed(ActionEvent arg0) {
+				Current.removeAll();
+				Current.add(MainPanel);
+				Current.repaint();
+			}
+		});
+		
+		add.addActionListener(new ActionListener(){
+
+			public void actionPerformed(ActionEvent arg0) {
+				String blank[]={"",""};
+				model.addRow(blank);
+			}
+		});
+		
+		time.addActionListener(new ActionListener(){
+
+			public void actionPerformed(ActionEvent arg0) {
+				String value[]={"年 月 日",""};
+				model.addRow(value);
+			}
+		});
+		
+		delete.addActionListener(new ActionListener(){
+
+			public void actionPerformed(ActionEvent arg0) {
+				int row = table.getSelectedRow();
+				model.removeRow(row);
+			}
+		});
+		
+		save.addActionListener(new ActionListener(){
+
+			public void actionPerformed(ActionEvent arg0) {
+				int i = model.getRowCount();
+				String route = new String();
+				int cost = 0;
+				for(int k=0;k<i;k++){
+					route += model.getValueAt(k, 0);
+					cost += (int)model.getValueAt(k, 1);
+				}
+				System.out.println(route+cost);
+			}
+		});
+		
+		Current.setBounds(0, 0, 1280, 643);
+		Current.setLayout(null);
+		Current.add(MainPanel);
+		frame.add(Current);
+		frame.setBounds(100, 100, 1280, 719);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(null);
+		frame.setVisible(true);
+
+
+
+	CityPanel(String n,String s){
+		
+		name = n;
+		speci = s;
+		sql1 = "SELECT * FROM PROJECTS WHERE CITY ="+"'"+name+"';";
+		sql2 = "SELECT * FROM  GUIDES WHERE CITY ="+"'"+name+"';";
+		sql3 = "SELECT * FROM TRANSPORT WHERE START ="+"'"+name+"';";
+		sql4 = "SELECT * FROM HOTELS WHERE CITY="+"'"+name+"';";
+		GetProjects();
+		GetGuides();
+		GetHotels();
+		GetTransport();
+		this.setBounds(15, 15, 830, 500);
+		this.setLayout(null);
+		tp.setBounds(15, 15, 845, 530);
+		tp2.setBounds(13, 13, 815, 475);
+		tp3.setBounds(13, 13, 815, 475);
+		tp4.setBounds(13, 13, 815, 475);
+		tp5.setBounds(13, 13, 815, 475);
+		tp.setFont(TOOL.standard);
+		tp2.setFont(TOOL.standard);
+		tp3.setFont(TOOL.standard);
+		tp4.setFont(TOOL.standard);
+		tp5.setFont(TOOL.standard);
+		tp.setTabLayoutPolicy (JTabbedPane.SCROLL_TAB_LAYOUT);
+		tp2.setTabLayoutPolicy (JTabbedPane.SCROLL_TAB_LAYOUT);
+		tp3.setTabLayoutPolicy (JTabbedPane.SCROLL_TAB_LAYOUT);
+		tp4.setTabLayoutPolicy (JTabbedPane.SCROLL_TAB_LAYOUT);
+		tp5.setTabLayoutPolicy (JTabbedPane.SCROLL_TAB_LAYOUT);
+		JPanel a = new JPanel(),b= new JPanel(),c= new JPanel(),d=new JPanel();
+		a.setLayout(null);a.setBounds(15, 15, 815, 500);
+		b.setLayout(null);b.setBounds(15, 15, 815, 500);
+		c.setLayout(null);c.setBounds(15, 15, 815, 500);
+		d.setLayout(null);d.setBounds(15, 15, 815, 500);
+		a.add(tp2);b.add(tp3);c.add(tp5);d.add(tp4);
+
+		this.add(tp);
+		
+		dispcity.Setheadline(name);
+		dispcity.SettextArea("城市简介:\n"+speci);
+		Icon picture = new ImageIcon("./"+name+".jpg");
+		dispcity.Setpic(picture);
+		
+		tp.add("城市简介",dispcity);
+		tp.addTab("景点一览", a);
+		tp.addTab("住宿信息", d);
+		tp.addTab("当地导游", b);
+		tp.addTab("交通信息", c);
+		for(ProjectsPanel key:pro){
+			tp2.addTab(key.showmyname(), key);
+		}
+		for(GuidesPanel key:guides){
+			tp3.addTab(key.showmyname(), key);
+		}
+		for(HotelsPanel key:hotels){
+			tp4.addTab(key.showmyname(), key);
+		}
+		for(TransportPanel key:transport){
+			tp5.addTab(key.showmyname(), new JScrollPane(key));
+		}
+		
+	}
+	
+}
